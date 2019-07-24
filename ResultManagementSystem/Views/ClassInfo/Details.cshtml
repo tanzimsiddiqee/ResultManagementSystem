@@ -1,0 +1,36 @@
+﻿@model ResultManagementSystem.Models.ClassInfo
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ClassInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassInfoName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClassInfoName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Class_)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Class_.ClassID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Section)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Section.SectionID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ClassInfoID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -13,5 +13,6 @@ namespace ResultManagementSystem.Models
 
         [Display(Name = "Section")]
         public string Name { get; set; }
+        public ICollection<ClassInfo> ClassInfos { get; set; }
     }
 }

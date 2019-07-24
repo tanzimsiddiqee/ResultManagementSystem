@@ -12,6 +12,5 @@ namespace ResultManagementSystem.Models
         public int SubjectCode { get; set; }
 
         public string Name { get; set; }
-
     }
 }

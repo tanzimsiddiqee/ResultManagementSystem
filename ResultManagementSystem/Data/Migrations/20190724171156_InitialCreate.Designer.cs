@@ -10,8 +10,8 @@ using ResultManagementSystem.Data;
 namespace ResultManagementSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190723200950_AddProductReview")]
-    partial class AddProductReview
+    [Migration("20190724171156_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -243,15 +243,7 @@ namespace ResultManagementSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address")
-                        .IsRequired();
-
                     b.Property<int?>("ClassInfoID");
-
-                    b.Property<string>("ClassSerial")
-                        .IsRequired();
-
-                    b.Property<int>("Phone");
 
                     b.Property<string>("StdName")
                         .IsRequired();
@@ -269,11 +261,56 @@ namespace ResultManagementSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("Class_ClassID");
+
                     b.Property<string>("Name");
 
                     b.HasKey("SubjectCode");
 
+                    b.HasIndex("Class_ClassID");
+
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("ResultManagementSystem.Models.Subject_Teacher", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ClassID");
+
+                    b.Property<int?>("ClassInfoID");
+
+                    b.Property<int>("SubjectCode");
+
+                    b.Property<int>("TeacherID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ClassID");
+
+                    b.HasIndex("ClassInfoID");
+
+                    b.HasIndex("SubjectCode");
+
+                    b.HasIndex("TeacherID");
+
+                    b.ToTable("Subject_Teachers");
+                });
+
+            modelBuilder.Entity("ResultManagementSystem.Models.Teacher", b =>
+                {
+                    b.Property<int>("TeacherID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("TeacherName")
+                        .IsRequired();
+
+                    b.HasKey("TeacherID");
+
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -324,12 +361,12 @@ namespace ResultManagementSystem.Data.Migrations
             modelBuilder.Entity("ResultManagementSystem.Models.ClassInfo", b =>
                 {
                     b.HasOne("ResultManagementSystem.Models.Class_", "Class_")
-                        .WithMany()
+                        .WithMany("ClassInfos")
                         .HasForeignKey("ClassID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ResultManagementSystem.Models.Section", "Section")
-                        .WithMany()
+                        .WithMany("ClassInfos")
                         .HasForeignKey("SectionID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -337,8 +374,37 @@ namespace ResultManagementSystem.Data.Migrations
             modelBuilder.Entity("ResultManagementSystem.Models.Student", b =>
                 {
                     b.HasOne("ResultManagementSystem.Models.ClassInfo", "ClassInfo")
-                        .WithMany()
+                        .WithMany("Students")
                         .HasForeignKey("ClassInfoID");
+                });
+
+            modelBuilder.Entity("ResultManagementSystem.Models.Subject", b =>
+                {
+                    b.HasOne("ResultManagementSystem.Models.Class_")
+                        .WithMany("Subjects")
+                        .HasForeignKey("Class_ClassID");
+                });
+
+            modelBuilder.Entity("ResultManagementSystem.Models.Subject_Teacher", b =>
+                {
+                    b.HasOne("ResultManagementSystem.Models.Class_", "Class_")
+                        .WithMany()
+                        .HasForeignKey("ClassID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ResultManagementSystem.Models.ClassInfo")
+                        .WithMany("Subject_Teachers")
+                        .HasForeignKey("ClassInfoID");
+
+                    b.HasOne("ResultManagementSystem.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ResultManagementSystem.Models.Teacher", "Teacher")
+                        .WithMany("Subject_Teachers")
+                        .HasForeignKey("TeacherID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

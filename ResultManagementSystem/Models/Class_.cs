@@ -13,5 +13,7 @@ namespace ResultManagementSystem.Models
 
         [Display(Name = "Class")]
         public string Name { get; set; }
+        public ICollection<ClassInfo> ClassInfos { get; set; }
+        public ICollection<Subject> Subjects { get; set; }
     }
 }

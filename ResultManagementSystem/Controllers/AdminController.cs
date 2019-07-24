@@ -14,7 +14,7 @@ using ResultManagementSystem.Models.AdminViewModels;
 
 namespace ResultManagementSystem.Controllers
 {
-    [Authorize(Roles = "Administraion")]
+    [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;

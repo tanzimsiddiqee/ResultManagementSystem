@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace ResultManagementSystem.Models
 {
-    public class Student
+    public class Teacher
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Display(Name = "Student ID")]
-        public int StudentID { get; set; }
+        [Display(Name = "Teacher ID")]
+        public int TeacherID { get; set; }
         [Required]
-        [Display(Name = "Student Name")]
-        public string StdName { get; set; }
-        public int? ClassInfoID { get; set; }
-        public ClassInfo ClassInfo { get; set; }
+        [Display(Name = "Teacher Name")]
+        public string TeacherName { get; set; }
+        public ICollection<Subject_Teacher> Subject_Teachers { get; set; }
     }
 }

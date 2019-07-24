@@ -14,16 +14,13 @@ namespace ResultManagementSystem.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             :base(options)
         {
-
         }
-        public DbSet<Class_> Classes { get; set; }
-
-        public DbSet<ClassInfo> ClassInfo { get; set; }
-
-        public DbSet<Section> Sections { get; set; }
-
         public DbSet<Student> Students { get; set; }
-
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Class_> Classes { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<ClassInfo> ClassInfo { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Subject_Teacher> Subject_Teachers { get; set; }
     }
 }

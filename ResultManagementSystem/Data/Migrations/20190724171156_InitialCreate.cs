@@ -41,7 +41,7 @@ namespace ResultManagementSystem.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
                     DOB = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -76,16 +76,16 @@ namespace ResultManagementSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subjects",
+                name: "Teachers",
                 columns: table => new
                 {
-                    SubjectCode = table.Column<int>(nullable: false)
+                    TeacherID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
+                    TeacherName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subjects", x => x.SubjectCode);
+                    table.PrimaryKey("PK_Teachers", x => x.TeacherID);
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +195,26 @@ namespace ResultManagementSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Subjects",
+                columns: table => new
+                {
+                    SubjectCode = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Class_ClassID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subjects", x => x.SubjectCode);
+                    table.ForeignKey(
+                        name: "FK_Subjects_Classes_Class_ClassID",
+                        column: x => x.Class_ClassID,
+                        principalTable: "Classes",
+                        principalColumn: "ClassID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ClassInfo",
                 columns: table => new
                 {
@@ -228,9 +248,6 @@ namespace ResultManagementSystem.Data.Migrations
                     StudentID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     StdName = table.Column<string>(nullable: false),
-                    ClassSerial = table.Column<string>(nullable: false),
-                    Address = table.Column<string>(nullable: false),
-                    Phone = table.Column<int>(nullable: false),
                     ClassInfoID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -242,6 +259,46 @@ namespace ResultManagementSystem.Data.Migrations
                         principalTable: "ClassInfo",
                         principalColumn: "ClassInfoID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subject_Teachers",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TeacherID = table.Column<int>(nullable: false),
+                    ClassID = table.Column<int>(nullable: false),
+                    SubjectCode = table.Column<int>(nullable: false),
+                    ClassInfoID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subject_Teachers", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Subject_Teachers_Classes_ClassID",
+                        column: x => x.ClassID,
+                        principalTable: "Classes",
+                        principalColumn: "ClassID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Subject_Teachers_ClassInfo_ClassInfoID",
+                        column: x => x.ClassInfoID,
+                        principalTable: "ClassInfo",
+                        principalColumn: "ClassInfoID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Subject_Teachers_Subjects_SubjectCode",
+                        column: x => x.SubjectCode,
+                        principalTable: "Subjects",
+                        principalColumn: "SubjectCode",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Subject_Teachers_Teachers_TeacherID",
+                        column: x => x.TeacherID,
+                        principalTable: "Teachers",
+                        principalColumn: "TeacherID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -297,6 +354,31 @@ namespace ResultManagementSystem.Data.Migrations
                 name: "IX_Students_ClassInfoID",
                 table: "Students",
                 column: "ClassInfoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subject_Teachers_ClassID",
+                table: "Subject_Teachers",
+                column: "ClassID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subject_Teachers_ClassInfoID",
+                table: "Subject_Teachers",
+                column: "ClassInfoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subject_Teachers_SubjectCode",
+                table: "Subject_Teachers",
+                column: "SubjectCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subject_Teachers_TeacherID",
+                table: "Subject_Teachers",
+                column: "TeacherID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subjects_Class_ClassID",
+                table: "Subjects",
+                column: "Class_ClassID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -320,7 +402,7 @@ namespace ResultManagementSystem.Data.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Subjects");
+                name: "Subject_Teachers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -332,10 +414,16 @@ namespace ResultManagementSystem.Data.Migrations
                 name: "ClassInfo");
 
             migrationBuilder.DropTable(
-                name: "Classes");
+                name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "Teachers");
 
             migrationBuilder.DropTable(
                 name: "Sections");
+
+            migrationBuilder.DropTable(
+                name: "Classes");
         }
     }
 }

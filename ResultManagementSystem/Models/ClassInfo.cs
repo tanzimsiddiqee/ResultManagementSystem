@@ -18,6 +18,8 @@ namespace ResultManagementSystem.Models
         public Class_ Class_ { get; set; }
         public int SectionID { get; set; }
         public Section Section { get; set; }
+        public ICollection<Student> Students { get; set; }
+        public ICollection<Subject_Teacher> Subject_Teachers { get; set; }
 
     }
 }
